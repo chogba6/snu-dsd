@@ -82,6 +82,10 @@ module conv_apb
           /*WRITEIN*/
           32'h00000000 : begin
             COMMAND <= PWDATA[2:0];
+            if (PWDATA[2:0] == 3'b100)
+              conv_start <= 1'b1;
+            else
+              conv_start <= 1'b0;
           end
           32'h00000004 : begin
             InCh <= PWDATA[8:0];
@@ -91,9 +95,12 @@ module conv_apb
           end
           32'h0000000c : begin
             FLength <= PWDATA[5:0];
-          end                             
+          end
           default: ;
         endcase
+      end
+      else if (conv_done) begin
+        conv_start <= 1'b0;
       end
     end
   end
